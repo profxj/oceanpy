@@ -9,4 +9,5 @@ available in the `unyt` namespace.
 import numpy as _numpy
 import unyt
 
-
+# Sverdrup
+unyt.define_unit('Sverdrup', 1e6*unyt.m**3/unyt.s)
