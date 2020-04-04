@@ -27,3 +27,8 @@ if LooseVersion(sys.version) < LooseVersion(__minimum_python_version__):
 if not _ASTROPY_SETUP_:   # noqa
     # For egg_info test builds to pass, put package imports here.
     pass
+
+# Oceanography units and constants
+from oceanpy.constants import oceandata2019
+
+from oceanpy.units import oceanography
