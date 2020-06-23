@@ -1,11 +1,27 @@
 """ I/O routines for SST data"""
 
 import os
+import numpy as np
 
 import iris
 
+from oceanpy.sphharm import utils
 
-def load_noaa(dmy):
+
+def load_noaa(dmy, nside=None, mask=False):
+    """
+
+    Parameters
+    ----------
+    dmy : tuple  (day, month, year)
+    nside : int, optional
+    mask : bool, optional
+
+    Returns
+    -------
+    dmy_cube or SST : iris.Cube or healpy.ma
+
+    """
     # Convenience
     day, month, year = dmy
     # Check
@@ -22,5 +38,17 @@ def load_noaa(dmy):
         day=day, year=year, month=month))
     dmy_cube = sst_cube.extract(constraint)
 
+    # Healpix?
+    if nside is None:
+        return dmy_cube
+
+    SST, _, _ = utils.cube_to_healpix(nside, dmy_cube, fill_value=-10)
+
+    if mask:
+        # Mask
+        land_mask = np.zeros_like(SST, dtype='bool')
+        land_mask[SST < -5] = True
+        SST.mask = land_mask
+
     # Return
-    return dmy_cube
+    return SST
