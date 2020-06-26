@@ -9,7 +9,7 @@ from oceanpy.sphharm import utils
 from oceanpy.sst import climate
 
 
-def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False):
+def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False, ret_angles=False):
     """
 
     Parameters
@@ -19,10 +19,13 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False):
     mask : bool, optional
     subtract_seasonal : bool, optional
         Subtract off the seasonal average?
+    ret_angles : bool, optional
 
     Returns
     -------
     dmy_cube or SST : iris.Cube or healpy.ma
+    if ret_angles:
+       theta, phi
 
     """
     # Convenience
@@ -50,7 +53,7 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False):
     if nside is None:
         return dmy_cube
 
-    SST, _, _ = utils.cube_to_healpix(nside, dmy_cube, fill_value=-10)
+    SST, theta, phi = utils.cube_to_healpix(nside, dmy_cube, fill_value=-10)
 
     if mask:
         # Mask
@@ -59,4 +62,7 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False):
         SST.mask = land_mask
 
     # Return
-    return SST
+    if ret_angles:
+        return SST, theta, phi
+    else:
+        return SST
