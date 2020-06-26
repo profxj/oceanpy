@@ -6,9 +6,10 @@ import numpy as np
 import iris
 
 from oceanpy.sphharm import utils
+from oceanpy.sst import climate
 
 
-def load_noaa(dmy, nside=None, mask=False):
+def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False):
     """
 
     Parameters
@@ -16,6 +17,8 @@ def load_noaa(dmy, nside=None, mask=False):
     dmy : tuple  (day, month, year)
     nside : int, optional
     mask : bool, optional
+    subtract_seasonal : bool, optional
+        Subtract off the seasonal average?
 
     Returns
     -------
@@ -37,6 +40,11 @@ def load_noaa(dmy, nside=None, mask=False):
     constraint = iris.Constraint(time=iris.time.PartialDateTime(
         day=day, year=year, month=month))
     dmy_cube = sst_cube.extract(constraint)
+
+    # Seasonal?
+    if subtract_seasonal:
+        Tday = climate.noaa_climate_day(dmy[0])
+        dmy_cube -= Tday
 
     # Healpix?
     if nside is None:
