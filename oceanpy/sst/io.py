@@ -2,11 +2,14 @@
 
 import os
 import numpy as np
+import datetime
 
 import iris
 
 from oceanpy.sphharm import utils
 from oceanpy.sst import climate
+
+from IPython import embed
 
 
 def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False, ret_angles=False):
@@ -46,7 +49,10 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False, ret_angles=F
 
     # Seasonal?
     if subtract_seasonal:
-        Tday = climate.noaa_climate_day(dmy[0])
+        dt = datetime.datetime(year=dmy[2], month=dmy[1], day=dmy[0])
+        day_of_year = (dt - datetime.datetime(dt.year, 1, 1)).days + 1
+        #
+        Tday = climate.noaa_climate_day(day_of_year)
         dmy_cube -= Tday
 
     # Healpix?
