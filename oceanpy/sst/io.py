@@ -50,6 +50,7 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False, ret_angles=F
     # Seasonal?
     if subtract_seasonal:
         dt = datetime.datetime(year=dmy[2], month=dmy[1], day=dmy[0])
+        import pdb; pdb.set_trace()  # NEED TO DEAL WITH LEAP DAY
         day_of_year = (dt - datetime.datetime(dt.year, 1, 1)).days + 1
         #
         Tday = climate.noaa_climate_day(day_of_year)
