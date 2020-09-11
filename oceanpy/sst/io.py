@@ -12,7 +12,8 @@ from oceanpy.sst import climate
 from IPython import embed
 
 
-def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False, ret_angles=False):
+def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False,
+              ret_angles=False, climate_file=None):
     """
 
     Parameters
@@ -50,10 +51,15 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False, ret_angles=F
     # Seasonal?
     if subtract_seasonal:
         dt = datetime.datetime(year=dmy[2], month=dmy[1], day=dmy[0])
-        import pdb; pdb.set_trace()  # NEED TO DEAL WITH LEAP DAY
         day_of_year = (dt - datetime.datetime(dt.year, 1, 1)).days + 1
+        # Leap year?
+        if (year % 4) != 0:
+            if day_of_year <= 28:
+                pass
+            else:
+                day_of_year += 1
         #
-        Tday = climate.noaa_climate_day(day_of_year)
+        Tday = climate.noaa_climate_day(day_of_year, climate_file=climate_file)
         dmy_cube -= Tday
 
     # Healpix?
