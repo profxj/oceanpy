@@ -4,7 +4,7 @@ import os
 import numpy as np
 import datetime
 
-import iris
+#import iris
 
 from oceanpy.sphharm import utils
 from oceanpy.sst import climate

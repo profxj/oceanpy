@@ -1,8 +1,8 @@
 """ Utilities for SST data and analysis"""
 import numpy as np
 
-import iris
-from cf_units import Unit
+#import iris
+#from cf_units import Unit
 
 def noaa_oi_coords(as_iris_coord=False):
     """
