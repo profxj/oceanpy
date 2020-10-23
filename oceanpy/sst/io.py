@@ -27,7 +27,7 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False,
 
     Returns
     -------
-    dmy_cube or SST : iris.Cube or healpy.ma
+    dmy_cube or SST : xarray.DataArray or healpy.ma
     if ret_angles:
        theta, phi
 
