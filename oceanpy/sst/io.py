@@ -20,6 +20,7 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False,
     ----------
     dmy : tuple  (day, month, year)
     nside : int, optional
+        If provided, convert into a healpix
     mask : bool, optional
     subtract_seasonal : bool, optional
         Subtract off the seasonal average?
