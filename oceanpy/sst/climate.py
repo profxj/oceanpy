@@ -3,7 +3,7 @@ import os
 import xarray
 
 
-def noaa_climate_day(doy, climate_file=None):
+def noaa_climate_day(doy, climate_file=None, threshT=False):
     """
     Return the SST for a given day of the year.
 
@@ -12,10 +12,13 @@ def noaa_climate_day(doy, climate_file=None):
     Parameters
     ----------
     doy : int
+    threshT : bool, optional
+        If True, return Tthresh instead of seasonalT
 
     Returns
     -------
-    Tday : iris.Cube
+    Tday : xarray.DataSet
+        Seasonal T (climatology) if Tthresh is False else Tthresh
 
     """
     if climate_file is None:
@@ -26,11 +29,10 @@ def noaa_climate_day(doy, climate_file=None):
         climate_file = os.path.join(os.getenv('NOAA_OI'), 'NOAA_OI_climate_1983-2012.nc')
     #seasonalT = iris.load(climate_file, 'seasonalT')[0]
     ncep_climate = xarray.open_dataset(climate_file)
-    Tday = ncep_climate.seasonalT.sel(day=doy-1) #  Should be updated
-    # Day
-    #day = iris.Constraint(day=doy)
-    #Tday = seasonalT.extract(day)
-    #Tday.units = 'degC'  # Hack for now
+    if not threshT:
+        Tday = ncep_climate.seasonalT.sel(day=doy-1) #  Should be updated
+    else:
+        Tday = ncep_climate.threshT.sel(day=doy-1) #  Should be updated
 
     # Return
     return Tday

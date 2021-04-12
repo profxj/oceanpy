@@ -13,6 +13,7 @@ from IPython import embed
 
 
 def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False,
+              subtract_thresh=False,
               ret_angles=False, climate_file=None):
     """
 
@@ -24,6 +25,8 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False,
     mask : bool, optional
     subtract_seasonal : bool, optional
         Subtract off the seasonal average?
+    subtract_thresh : bool, optional
+        Subtract off Tthresh?
     ret_angles : bool, optional
 
     Returns
@@ -53,17 +56,19 @@ def load_noaa(dmy, nside=None, mask=False, subtract_seasonal=False,
     dmy_SST = ds.sst.sel(time=time)
 
     # Seasonal?
-    if subtract_seasonal:
+    if subtract_seasonal or subtract_thresh:
         dt = datetime.datetime(year=dmy[2], month=dmy[1], day=dmy[0])
         day_of_year = (dt - datetime.datetime(dt.year, 1, 1)).days + 1
         # Leap year?
         if (year % 4) != 0:
-            if day_of_year <= 28:
+            if day_of_year <= 59:
                 pass
             else:
                 day_of_year += 1
         #
-        Tday = climate.noaa_climate_day(day_of_year, climate_file=climate_file)
+        Tday = climate.noaa_climate_day(day_of_year, 
+                                        climate_file=climate_file,
+                                        threshT=subtract_thresh)
         dmy_SST -= Tday
 
     # Healpix?
