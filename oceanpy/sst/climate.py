@@ -2,6 +2,8 @@
 import os
 import xarray
 
+from IPython import embed
+
 
 def noaa_climate_day(doy, climate_file=None, threshT=False):
     """
@@ -30,7 +32,7 @@ def noaa_climate_day(doy, climate_file=None, threshT=False):
     #seasonalT = iris.load(climate_file, 'seasonalT')[0]
     ncep_climate = xarray.open_dataset(climate_file)
     if not threshT:
-        Tday = ncep_climate.seasonalT.sel(day=doy-1) #  Should be updated
+        Tday = ncep_climate.seasonalT.sel(doy=doy) 
     else:
         Tday = ncep_climate.threshT.sel(day=doy-1) #  Should be updated
 
